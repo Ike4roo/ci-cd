@@ -1,0 +1,3 @@
+# After the tests successfully passed by ci.yml this CD file initiates deployment the app on Heroku platform (Ruby, Node.JS, Java, Scala, Go, PHP, .NET)
+# 
+#
