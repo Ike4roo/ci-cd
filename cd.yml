@@ -1,3 +1,38 @@
 # After the tests successfully passed by ci.yml this CD file initiates deployment the app on Heroku platform (Ruby, Node.JS, Java, Scala, Go, PHP, .NET)
 # 
 #
+
+name: CD Pipeline          # workfolw name
+
+on:                        # what triggers to start this workflow
+  push:                    # what will happen to start this
+    branches:              # on which brach will happen
+      - main
+
+jobs:                      # jobs list
+  deploy:                  # job to do in this workflow
+    runs-on: ubuntu-latest              # what host or VM
+    steps:                              # sequence of tasks in a job
+      - name: Checkout code             # step's name
+        uses: actions/checkout@v3       # uses official action which clones repo into a VM
+
+      - name: Set up Python             # name
+        uses: actions/setup-python@v4   # action to do
+        with:                           # parameters
+          python-version: '3.9'
+
+      - name: Install dependencies      # name
+        run: |                          # executes in bash
+          python -m pip install --upgrade pip    # pip manager upgrade
+          pip install -r requirements.txt        # reqs are located in *.txt file
+
+      - name: Run tests
+        run: |
+          python -m pytest
+
+      - name: Deploy to Heroku
+        env:                            # tells environment variables
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}    # API-key to authenticate on Heroku platform that are safely taken from GitHub Secrets (Setting -> Secrets and Variables -> Actions)
+        run: |                          # executes
+          git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/your-app-name.git      # adds remote repo of Heroku
+          git push heroku main                                                                       # sends code to Heroku that starts deployment process
