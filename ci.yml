@@ -2,33 +2,33 @@
 # This file automatically starts tests on each change in main branch
 # Locate: ./github/workflows/ci.yml
 
-name: CI Pipeline
+name: CI Pipeline # Workflow name
 
-on:
-  push:
+on:                       # what to do
+  push:                   # when starts
+    branches:             # which braches
+      - main
+  pull_request:           # when starts
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
-jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+jobs:                         # tasks of workflow
+  build-and-test:             # name of job
+    runs-on: ubuntu-latest    # on what host or VM
+    steps:                    # what steps to do
+      - name: Checkout code   # name of step
+        uses: actions/checkout@v3           # there is shown that is used existing action "actions/checkout version 3" - this action clones repo into VM
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
+      - name: Set up Python                 # name of step
+        uses: actions/setup-python@v4       # existing action of python 3.9 setup 
+        with:                               # what parameters to use in this action
           python-version: '3.9'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+      - name: Install dependencies          # step name
+        run: |                              # executes commands in bash
+          python -m pip install --upgrade pip       # updates packet manager pip
+          pip install -r requirements.txt           # installs requrements listed in file *.txt
 
-      - name: Run tests
-        run: |
-          python -m pytest
+      - name: Run tests                             # step's name
+        run: |                                      # executes in bash
+          python -m pytest                          # what to execute in bash: pytest script using python interpeter
